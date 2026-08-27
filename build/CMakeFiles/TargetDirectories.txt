@@ -1,0 +1,3 @@
+D:/task-manager/build/CMakeFiles/task-manager.dir
+D:/task-manager/build/CMakeFiles/edit_cache.dir
+D:/task-manager/build/CMakeFiles/rebuild_cache.dir
