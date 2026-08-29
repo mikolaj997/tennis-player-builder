@@ -9,6 +9,14 @@ class TennisGame
 private:
     std::vector<TennisPlayer> players;
 
+    TennisPlayer *selectedForehand = nullptr;
+    TennisPlayer *selectedBackhand = nullptr;
+    TennisPlayer *selectedServe = nullptr;
+    TennisPlayer *selectedVolley = nullptr;
+    TennisPlayer *selectedDropShot = nullptr;
+    TennisPlayer *selectedStamina = nullptr;
+    TennisPlayer *selectedMentalStrength = nullptr;
+
     bool forehandTaken = false;
     bool backhandTaken = false;
     bool serveTaken = false;

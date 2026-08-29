@@ -81,6 +81,8 @@ void TennisGame::startSelection()
         if (!forehandTaken)
         {
             forehandTaken = true;
+            selectedForehand = &players[randomIndex];
+
             std::cout << "Forehand assigned to "
                       << players[randomIndex].getName() << "\n";
         }
@@ -90,6 +92,8 @@ void TennisGame::startSelection()
         if (!backhandTaken)
         {
             backhandTaken = true;
+            selectedBackhand = &players[randomIndex];
+
             std::cout << "Backhand assigned to "
                       << players[randomIndex].getName() << "\n";
         }
@@ -99,6 +103,8 @@ void TennisGame::startSelection()
         if (!serveTaken)
         {
             serveTaken = true;
+            selectedServe = &players[randomIndex];
+
             std::cout << "Serve assigned to "
                       << players[randomIndex].getName() << "\n";
         }
@@ -108,6 +114,8 @@ void TennisGame::startSelection()
         if (!volleyTaken)
         {
             volleyTaken = true;
+            selectedVolley = &players[randomIndex];
+
             std::cout << "Volley assigned to "
                       << players[randomIndex].getName() << "\n";
         }
@@ -117,6 +125,8 @@ void TennisGame::startSelection()
         if (!dropShotTaken)
         {
             dropShotTaken = true;
+            selectedDropShot = &players[randomIndex];
+
             std::cout << "Drop Shot assigned to "
                       << players[randomIndex].getName() << "\n";
         }
@@ -126,6 +136,8 @@ void TennisGame::startSelection()
         if (!staminaTaken)
         {
             staminaTaken = true;
+            selectedStamina = &players[randomIndex];
+
             std::cout << "Stamina assigned to "
                       << players[randomIndex].getName() << "\n";
         }
@@ -135,6 +147,8 @@ void TennisGame::startSelection()
         if (!mentalStrengthTaken)
         {
             mentalStrengthTaken = true;
+            selectedMentalStrength = &players[randomIndex];
+
             std::cout << "Mental Strength assigned to "
                       << players[randomIndex].getName() << "\n";
         }
@@ -144,7 +158,8 @@ void TennisGame::startSelection()
         std::cout << "Invalid choice.\n";
     }
 }
-void TennisGame::startGame() {
+void TennisGame::startGame()
+{
     currentRound = 0;
 
     while (
@@ -154,8 +169,8 @@ void TennisGame::startGame() {
         !volleyTaken ||
         !dropShotTaken ||
         !staminaTaken ||
-        !mentalStrengthTaken
-    ) {
+        !mentalStrengthTaken)
+    {
         ++currentRound;
 
         std::cout << "\n=== ROUND "
