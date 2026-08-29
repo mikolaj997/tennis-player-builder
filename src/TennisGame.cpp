@@ -46,6 +46,7 @@ void TennisGame::startSelection()
 
     std::cout << "Choose an attribute:\n";
 
+    std::cout << "0. Skip\n";
     if (!forehandTaken)
         std::cout << "1. Forehand\n";
 
@@ -73,6 +74,9 @@ void TennisGame::startSelection()
 
     switch (choice)
     {
+    case 0:
+        std::cout << "Player skipped.\n";
+        break;
     case 1:
         if (!forehandTaken)
         {
@@ -140,12 +144,18 @@ void TennisGame::startSelection()
         std::cout << "Invalid choice.\n";
     }
 }
-void TennisGame::startGame()
-{
+void TennisGame::startGame() {
     currentRound = 0;
 
-    while (currentRound < 7)
-    {
+    while (
+        !forehandTaken ||
+        !backhandTaken ||
+        !serveTaken ||
+        !volleyTaken ||
+        !dropShotTaken ||
+        !staminaTaken ||
+        !mentalStrengthTaken
+    ) {
         ++currentRound;
 
         std::cout << "\n=== ROUND "
