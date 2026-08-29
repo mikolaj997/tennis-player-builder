@@ -1,14 +1,14 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(TaskManager VERSION 1.0 LANGUAGES CXX)
+project(TennisPlayerBuilder VERSION 1.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_executable(task-manager
+add_executable(tennis-player-builder
     src/main.cpp
-    src/Task.cpp
-    src/TaskManager.cpp
+    src/TennisPlayer.cpp
+    src/TennisGame.cpp
 )
 
-target_include_directories(task-manager PRIVATE include)
+target_include_directories(tennis-player-builder PRIVATE include)
