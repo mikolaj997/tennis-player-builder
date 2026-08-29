@@ -1,9 +1,10 @@
 CXX = g++
+
 CXXFLAGS = -std=c++17 -Wall -Wextra -Iinclude
 
-TARGET = task-manager
+TARGET = tennis-player-builder
 
-SOURCES = src/main.cpp src/Task.cpp src/TaskManager.cpp
+SOURCES = src/main.cpp src/TennisPlayer.cpp src/TennisGame.cpp
 
 $(TARGET): $(SOURCES)
 	$(CXX) $(CXXFLAGS) $(SOURCES) -o $(TARGET)
