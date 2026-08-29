@@ -27,4 +27,5 @@ public:
     );
 
     std::string getName() const;
+    int getRating(const std::string& attribute) const;
 };

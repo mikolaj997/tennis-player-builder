@@ -38,6 +38,8 @@ public:
         int stamina,
         int mentalStrength);
 
+    int calculateRating() const;
+
     void showPlayers() const;
     void startGame();
     void startSelection();

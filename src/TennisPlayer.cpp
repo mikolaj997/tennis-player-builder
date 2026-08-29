@@ -23,3 +23,27 @@ TennisPlayer::TennisPlayer(
 std::string TennisPlayer::getName() const {
     return name;
 }
+int TennisPlayer::getRating(const std::string& attribute) const {
+    if (attribute == "forehand")
+        return forehand;
+
+    if (attribute == "backhand")
+        return backhand;
+
+    if (attribute == "serve")
+        return serve;
+
+    if (attribute == "volley")
+        return volley;
+
+    if (attribute == "dropShot")
+        return dropShot;
+
+    if (attribute == "stamina")
+        return stamina;
+
+    if (attribute == "mentalStrength")
+        return mentalStrength;
+
+    return 0;
+}

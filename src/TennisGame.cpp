@@ -182,6 +182,9 @@ void TennisGame::startGame()
 
     std::cout << "\n=== GAME OVER ===\n";
     showPlayerSummary();
+    std::cout << "\nFinal rating: "
+              << calculateRating()
+              << "\n";
 }
 void TennisGame::showPlayerSummary() const
 {
@@ -214,4 +217,18 @@ void TennisGame::showPlayerSummary() const
     std::cout << "Mental Strength: ";
     if (selectedMentalStrength != nullptr)
         std::cout << selectedMentalStrength->getName() << '\n';
+}
+int TennisGame::calculateRating() const
+{
+    int total = 0;
+
+    total += selectedForehand->getRating("forehand");
+    total += selectedBackhand->getRating("backhand");
+    total += selectedServe->getRating("serve");
+    total += selectedVolley->getRating("volley");
+    total += selectedDropShot->getRating("dropShot");
+    total += selectedStamina->getRating("stamina");
+    total += selectedMentalStrength->getRating("mentalStrength");
+
+    return total / 7;
 }
