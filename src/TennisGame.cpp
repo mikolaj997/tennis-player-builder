@@ -181,4 +181,37 @@ void TennisGame::startGame()
     }
 
     std::cout << "\n=== GAME OVER ===\n";
+    showPlayerSummary();
+}
+void TennisGame::showPlayerSummary() const
+{
+    std::cout << "\n=== YOUR PLAYER ===\n";
+
+    std::cout << "Forehand: ";
+    if (selectedForehand != nullptr)
+        std::cout << selectedForehand->getName() << '\n';
+
+    std::cout << "Backhand: ";
+    if (selectedBackhand != nullptr)
+        std::cout << selectedBackhand->getName() << '\n';
+
+    std::cout << "Serve: ";
+    if (selectedServe != nullptr)
+        std::cout << selectedServe->getName() << '\n';
+
+    std::cout << "Volley: ";
+    if (selectedVolley != nullptr)
+        std::cout << selectedVolley->getName() << '\n';
+
+    std::cout << "Drop Shot: ";
+    if (selectedDropShot != nullptr)
+        std::cout << selectedDropShot->getName() << '\n';
+
+    std::cout << "Stamina: ";
+    if (selectedStamina != nullptr)
+        std::cout << selectedStamina->getName() << '\n';
+
+    std::cout << "Mental Strength: ";
+    if (selectedMentalStrength != nullptr)
+        std::cout << selectedMentalStrength->getName() << '\n';
 }

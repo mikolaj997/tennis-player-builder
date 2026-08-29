@@ -41,4 +41,5 @@ public:
     void showPlayers() const;
     void startGame();
     void startSelection();
+    void showPlayerSummary() const;
 };
