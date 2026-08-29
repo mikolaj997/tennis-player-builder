@@ -22,6 +22,8 @@ void TennisGame::addPlayer(
         dropShot,
         stamina,
         mentalStrength);
+
+    playerUsed.push_back(false);
 }
 
 void TennisGame::startSelection()
@@ -35,12 +37,23 @@ void TennisGame::startSelection()
     std::random_device rd;
     std::mt19937 generator(rd());
 
+    std::vector<int> availablePlayers;
+
+
+    for (int i = 0; i < players.size(); ++i)
+    {
+        if (!playerUsed[i])
+        {
+            availablePlayers.push_back(i);
+        }
+    }
     std::uniform_int_distribution<int> distribution(
         0,
-        static_cast<int>(players.size()) - 1);
+        static_cast<int>(availablePlayers.size()) - 1);
 
-    int randomIndex = distribution(generator);
+    int randomIndex = availablePlayers[distribution(generator)];
 
+    playerUsed[randomIndex] = true;
     std::cout << "\nRandom player:\n";
     std::cout << players[randomIndex].getName() << "\n\n";
 

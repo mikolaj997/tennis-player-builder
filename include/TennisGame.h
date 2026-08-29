@@ -8,6 +8,7 @@ class TennisGame
 {
 private:
     std::vector<TennisPlayer> players;
+    std::vector<bool> playerUsed;
 
     TennisPlayer *selectedForehand = nullptr;
     TennisPlayer *selectedBackhand = nullptr;
