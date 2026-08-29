@@ -4,7 +4,8 @@
 
 #include <vector>
 
-class TennisGame {
+class TennisGame
+{
 private:
     std::vector<TennisPlayer> players;
 
@@ -16,18 +17,20 @@ private:
     bool staminaTaken = false;
     bool mentalStrengthTaken = false;
 
+    int currentRound = 0;
+
 public:
     void addPlayer(
-        const std::string& name,
+        const std::string &name,
         int forehand,
         int backhand,
         int serve,
         int volley,
         int dropShot,
         int stamina,
-        int mentalStrength
-    );
+        int mentalStrength);
 
     void showPlayers() const;
+    void startGame();
     void startSelection();
 };

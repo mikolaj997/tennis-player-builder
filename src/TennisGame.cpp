@@ -140,3 +140,20 @@ void TennisGame::startSelection()
         std::cout << "Invalid choice.\n";
     }
 }
+void TennisGame::startGame()
+{
+    currentRound = 0;
+
+    while (currentRound < 7)
+    {
+        ++currentRound;
+
+        std::cout << "\n=== ROUND "
+                  << currentRound
+                  << " ===\n";
+
+        startSelection();
+    }
+
+    std::cout << "\n=== GAME OVER ===\n";
+}
