@@ -81,3 +81,20 @@ cmake --build build
 ```bash
 make run
 ```
+
+## Screen shots:
+### One player mode:
+<img width="321" height="974" alt="image" src="https://github.com/user-attachments/assets/ad9ef81f-fcd5-4252-90f2-221cc1e3ed39" />
+
+<img width="387" height="973" alt="image" src="https://github.com/user-attachments/assets/04814ee7-7ce1-4d42-924c-0022e59a6444" />
+
+### Two players mode:
+<img width="338" height="972" alt="image" src="https://github.com/user-attachments/assets/819bb0a6-fa4f-4734-ab86-2bda87619011" />
+
+<img width="369" height="968" alt="image" src="https://github.com/user-attachments/assets/59688f6b-3792-4951-b879-99e52b851eff" />
+
+<img width="414" height="915" alt="image" src="https://github.com/user-attachments/assets/4011533c-843b-4ba6-ae0c-67abd7ec7afe" />
+
+
+
+
