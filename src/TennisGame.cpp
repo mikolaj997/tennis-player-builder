@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <random>
+#include <algorithm>
 
 void TennisGame::addPlayer(
     const std::string &name,
@@ -38,7 +39,6 @@ void TennisGame::startSelection()
     std::mt19937 generator(rd());
 
     std::vector<int> availablePlayers;
-
 
     for (int i = 0; i < players.size(); ++i)
     {
@@ -244,4 +244,138 @@ int TennisGame::calculateRating() const
     total += selectedMentalStrength->getRating("mentalStrength");
 
     return total / 7;
+}
+bool TennisGame::hasAvailablePlayers() const
+{
+    for (bool used : playerUsed)
+    {
+        if (!used)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+int TennisGame::chooseTiebreakerPlayer(const std::string &attribute)
+{
+    std::vector<int> availablePlayers;
+
+    for (int i = 0; i < players.size(); ++i)
+    {
+        if (!playerUsed[i])
+        {
+            availablePlayers.push_back(i);
+        }
+    }
+
+    std::cout << "\nChoose a player for " << attribute << ":\n";
+
+    for (size_t i = 0; i < availablePlayers.size(); ++i)
+    {
+        int playerIndex = availablePlayers[i];
+
+        std::cout << i + 1 << ". "
+                  << players[playerIndex].getName()
+                  << " - "
+                  << players[playerIndex].getRating(attribute)
+                  << "\n";
+    }
+
+    int choice;
+
+    std::cout << "Choose: ";
+    std::cin >> choice;
+
+    while (choice < 1 || choice > static_cast<int>(availablePlayers.size()))
+    {
+        std::cout << "Invalid choice. Choose again: ";
+        std::cin >> choice;
+    }
+
+    int selectedIndex = availablePlayers[choice - 1];
+    playerUsed[selectedIndex] = true;
+
+    int rating = players[selectedIndex].getRating(attribute);
+
+    std::cout << players[selectedIndex].getName()
+              << " selected - "
+              << attribute << ": " << rating << "\n";
+
+    return rating;
+}
+
+void TennisGame::startTiebreaker(TennisGame &other)
+{
+    std::cout << "\n=== TIEBREAKER ===\n";
+
+    std::random_device rd;
+    std::mt19937 generator(rd());
+
+    std::vector<std::string> attributes = {
+        "forehand",
+        "backhand",
+        "serve",
+        "volley",
+        "dropShot",
+        "stamina",
+        "mentalStrength"};
+
+    std::uniform_int_distribution<int> attributeDistribution(
+        0,
+        static_cast<int>(attributes.size()) - 1);
+
+    bool decided = false;
+
+    while (!decided)
+    {
+        bool player1HasPlayers = hasAvailablePlayers();
+        bool player2HasPlayers = other.hasAvailablePlayers();
+
+        if (!player1HasPlayers && !player2HasPlayers)
+        {
+            std::cout << "\nNeither player has any players left. Draw!\n";
+            return;
+        }
+
+        if (!player1HasPlayers)
+        {
+            std::cout << "\nPlayer 1 has no players left to choose from. Player 2 wins!\n";
+            return;
+        }
+
+        if (!player2HasPlayers)
+        {
+            std::cout << "\nPlayer 2 has no players left to choose from. Player 1 wins!\n";
+            return;
+        }
+
+        const std::string &attribute = attributes[attributeDistribution(generator)];
+
+        std::cout << "\nTiebreaker attribute: " << attribute << "\n";
+
+        std::cout << "\n--- Player 1 ---\n";
+        int value1 = chooseTiebreakerPlayer(attribute);
+
+        std::cout << "\n--- Player 2 ---\n";
+        int value2 = other.chooseTiebreakerPlayer(attribute);
+
+        std::cout << "\nComparing " << attribute << ": "
+                  << value1 << " vs " << value2 << "\n";
+
+        if (value1 > value2)
+        {
+            std::cout << "Winner (tiebreaker): Player 1\n";
+            decided = true;
+        }
+        else if (value2 > value1)
+        {
+            std::cout << "Winner (tiebreaker): Player 2\n";
+            decided = true;
+        }
+        else
+        {
+            std::cout << "Still tied on this attribute. Another round...\n";
+        }
+    }
 }

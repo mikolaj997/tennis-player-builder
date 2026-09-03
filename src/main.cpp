@@ -1,6 +1,10 @@
 #include "TennisGame.h"
 
 #include <iostream>
+#include <random>
+#include <algorithm>
+#include <vector>
+#include <string>
 
 void loadPlayers(TennisGame &game)
 {
@@ -72,6 +76,7 @@ int main()
         else
         {
             std::cout << "Draw!\n";
+            player1.startTiebreaker(player2);
         }
     }
     else

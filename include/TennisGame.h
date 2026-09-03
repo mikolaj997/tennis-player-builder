@@ -44,5 +44,10 @@ public:
     void showPlayers() const;
     void startGame();
     void startSelection();
+    void startTiebreaker(TennisGame &other);
     void showPlayerSummary() const;
+
+private:
+    int chooseTiebreakerPlayer(const std::string &attribute);
+    bool hasAvailablePlayers() const;
 };

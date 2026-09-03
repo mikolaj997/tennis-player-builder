@@ -1,15 +1,14 @@
 #include "TennisPlayer.h"
 
 TennisPlayer::TennisPlayer(
-    const std::string& name,
+    const std::string &name,
     int forehand,
     int backhand,
     int serve,
     int volley,
     int dropShot,
     int stamina,
-    int mentalStrength
-)
+    int mentalStrength)
     : name(name),
       forehand(forehand),
       backhand(backhand),
@@ -17,13 +16,16 @@ TennisPlayer::TennisPlayer(
       volley(volley),
       dropShot(dropShot),
       stamina(stamina),
-      mentalStrength(mentalStrength) {
+      mentalStrength(mentalStrength)
+{
 }
 
-std::string TennisPlayer::getName() const {
+std::string TennisPlayer::getName() const
+{
     return name;
 }
-int TennisPlayer::getRating(const std::string& attribute) const {
+int TennisPlayer::getRating(const std::string &attribute) const
+{
     if (attribute == "forehand")
         return forehand;
 
