@@ -35,6 +35,7 @@ when the final player is evaluated.
 - Skip mechanic
 - Hidden attribute ratings
 - Final player rating
+- Tibreak in case of draw
 - Single-player mode
 - Two-player mode
 - Winner determination
@@ -94,6 +95,8 @@ make run
 <img width="369" height="968" alt="image" src="https://github.com/user-attachments/assets/59688f6b-3792-4951-b879-99e52b851eff" />
 
 <img width="414" height="915" alt="image" src="https://github.com/user-attachments/assets/4011533c-843b-4ba6-ae0c-67abd7ec7afe" />
+
+### In case of draw:
 
 <img width="692" height="320" alt="image" src="https://github.com/user-attachments/assets/7793cd9b-549c-4ad1-9a94-e078c8efeadf" />
 
