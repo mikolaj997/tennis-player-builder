@@ -49,5 +49,6 @@ public:
 
 private:
     int chooseTiebreakerPlayer(const std::string &attribute);
+    int pickRandomPlayerRating(const std::string &attribute) const;
     bool hasAvailablePlayers() const;
 };

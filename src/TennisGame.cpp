@@ -277,8 +277,6 @@ int TennisGame::chooseTiebreakerPlayer(const std::string &attribute)
 
         std::cout << i + 1 << ". "
                   << players[playerIndex].getName()
-                  << " - "
-                  << players[playerIndex].getRating(attribute)
                   << "\n";
     }
 
@@ -296,11 +294,22 @@ int TennisGame::chooseTiebreakerPlayer(const std::string &attribute)
     int selectedIndex = availablePlayers[choice - 1];
     playerUsed[selectedIndex] = true;
 
-    int rating = players[selectedIndex].getRating(attribute);
+    std::cout << players[selectedIndex].getName() << " selected.\n";
 
-    std::cout << players[selectedIndex].getName()
-              << " selected - "
-              << attribute << ": " << rating << "\n";
+    return players[selectedIndex].getRating(attribute);
+}
+
+int TennisGame::pickRandomPlayerRating(const std::string &attribute) const
+{
+    std::random_device rd;
+    std::mt19937 generator(rd());
+    std::uniform_int_distribution<int> distribution(0, static_cast<int>(players.size()) - 1);
+
+    int randomIndex = distribution(generator);
+    int rating = players[randomIndex].getRating(attribute);
+
+    std::cout << players[randomIndex].getName()
+              << " drawn from the full pool.\n";
 
     return rating;
 }
@@ -332,19 +341,13 @@ void TennisGame::startTiebreaker(TennisGame &other)
         bool player1HasPlayers = hasAvailablePlayers();
         bool player2HasPlayers = other.hasAvailablePlayers();
 
-        if (!player1HasPlayers && !player2HasPlayers)
-        {
-            std::cout << "\nNeither player has any players left. Draw!\n";
-            return;
-        }
-
-        if (!player1HasPlayers)
+        if (!player1HasPlayers && player2HasPlayers)
         {
             std::cout << "\nPlayer 1 has no players left to choose from. Player 2 wins!\n";
             return;
         }
 
-        if (!player2HasPlayers)
+        if (!player2HasPlayers && player1HasPlayers)
         {
             std::cout << "\nPlayer 2 has no players left to choose from. Player 1 wins!\n";
             return;
@@ -354,11 +357,27 @@ void TennisGame::startTiebreaker(TennisGame &other)
 
         std::cout << "\nTiebreaker attribute: " << attribute << "\n";
 
-        std::cout << "\n--- Player 1 ---\n";
-        int value1 = chooseTiebreakerPlayer(attribute);
+        int value1;
+        int value2;
 
-        std::cout << "\n--- Player 2 ---\n";
-        int value2 = other.chooseTiebreakerPlayer(attribute);
+        if (!player1HasPlayers && !player2HasPlayers)
+        {
+            std::cout << "Both benches are empty - drawing one player from the full pool for each.\n";
+
+            std::cout << "\n--- Player 1 ---\n";
+            value1 = pickRandomPlayerRating(attribute);
+
+            std::cout << "\n--- Player 2 ---\n";
+            value2 = other.pickRandomPlayerRating(attribute);
+        }
+        else
+        {
+            std::cout << "\n--- Player 1 ---\n";
+            value1 = chooseTiebreakerPlayer(attribute);
+
+            std::cout << "\n--- Player 2 ---\n";
+            value2 = other.chooseTiebreakerPlayer(attribute);
+        }
 
         std::cout << "\nComparing " << attribute << ": "
                   << value1 << " vs " << value2 << "\n";
