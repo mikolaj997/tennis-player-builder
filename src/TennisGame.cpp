@@ -39,9 +39,9 @@ void TennisGame::startSelection()
     std::random_device rd;
     std::mt19937 generator(rd());
 
-    std::vector<int> availablePlayers;
+    std::vector<std::size_t> availablePlayers;
 
-    for (int i = 0; i < players.size(); ++i)
+    for (std::size_t i = 0; i < players.size(); ++i)
     {
         if (!playerUsed[i])
         {
@@ -54,16 +54,14 @@ void TennisGame::startSelection()
         return;
     }
 
-    const int remainingAttributes =
-        !forehandTaken + !backhandTaken + !serveTaken + !volleyTaken +
-        !dropShotTaken + !staminaTaken + !mentalStrengthTaken;
+    const auto remainingAttributes = std::count(selectedPlayers.begin(), selectedPlayers.end(), std::nullopt);
     const bool canSkip = availablePlayers.size() > static_cast<size_t>(remainingAttributes);
 
     std::uniform_int_distribution<int> distribution(
         0,
         static_cast<int>(availablePlayers.size()) - 1);
 
-    int randomIndex = availablePlayers[distribution(generator)];
+    const auto randomIndex = availablePlayers[distribution(generator)];
 
     std::cout << "\nRandom player:\n";
     std::cout << players[randomIndex].getName() << "\n\n";
@@ -72,41 +70,24 @@ void TennisGame::startSelection()
 
     if (canSkip)
         std::cout << "0. Skip\n";
-    if (!forehandTaken)
-        std::cout << "1. Forehand\n";
-
-    if (!backhandTaken)
-        std::cout << "2. Backhand\n";
-
-    if (!serveTaken)
-        std::cout << "3. Serve\n";
-
-    if (!volleyTaken)
-        std::cout << "4. Volley\n";
-
-    if (!dropShotTaken)
-        std::cout << "5. Drop Shot\n";
-
-    if (!staminaTaken)
-        std::cout << "6. Stamina\n";
-
-    if (!mentalStrengthTaken)
-        std::cout << "7. Mental Strength\n";
+    for (std::size_t i = 0; i < attributeCount; ++i)
+    {
+        if (!selectedPlayers[i])
+            std::cout << i + 1 << ". " << attributeNames[i] << "\n";
+    }
 
     int choice;
     std::cout << "Choose: ";
-    const bool taken[] = {false, forehandTaken, backhandTaken, serveTaken,
-                          volleyTaken, dropShotTaken, staminaTaken, mentalStrengthTaken};
     while (true)
     {
-        if (!readChoice(choice, 0, 7))
+        if (!readChoice(choice, 0, static_cast<int>(attributeCount)))
             return;
         if (choice == 0 && !canSkip)
         {
             std::cout << "No skips left. Choose an attribute: ";
             continue;
         }
-        if (taken[choice])
+        if (choice > 0 && selectedPlayers[choice - 1])
         {
             std::cout << "Attribute already taken. Choose another attribute: ";
             continue;
@@ -116,225 +97,84 @@ void TennisGame::startSelection()
 
     playerUsed[randomIndex] = true;
 
-    switch (choice)
+    if (choice == 0)
     {
-    case 0:
         std::cout << "Player skipped.\n";
-        break;
-    case 1:
-        if (!forehandTaken)
-        {
-            forehandTaken = true;
-            selectedForehand = &players[randomIndex];
-
-            std::cout << "Forehand assigned to "
-                      << players[randomIndex].getName() << "\n";
-        }
-        break;
-
-    case 2:
-        if (!backhandTaken)
-        {
-            backhandTaken = true;
-            selectedBackhand = &players[randomIndex];
-
-            std::cout << "Backhand assigned to "
-                      << players[randomIndex].getName() << "\n";
-        }
-        break;
-
-    case 3:
-        if (!serveTaken)
-        {
-            serveTaken = true;
-            selectedServe = &players[randomIndex];
-
-            std::cout << "Serve assigned to "
-                      << players[randomIndex].getName() << "\n";
-        }
-        break;
-
-    case 4:
-        if (!volleyTaken)
-        {
-            volleyTaken = true;
-            selectedVolley = &players[randomIndex];
-
-            std::cout << "Volley assigned to "
-                      << players[randomIndex].getName() << "\n";
-        }
-        break;
-
-    case 5:
-        if (!dropShotTaken)
-        {
-            dropShotTaken = true;
-            selectedDropShot = &players[randomIndex];
-
-            std::cout << "Drop Shot assigned to "
-                      << players[randomIndex].getName() << "\n";
-        }
-        break;
-
-    case 6:
-        if (!staminaTaken)
-        {
-            staminaTaken = true;
-            selectedStamina = &players[randomIndex];
-
-            std::cout << "Stamina assigned to "
-                      << players[randomIndex].getName() << "\n";
-        }
-        break;
-
-    case 7:
-        if (!mentalStrengthTaken)
-        {
-            mentalStrengthTaken = true;
-            selectedMentalStrength = &players[randomIndex];
-
-            std::cout << "Mental Strength assigned to "
-                      << players[randomIndex].getName() << "\n";
-        }
-        break;
-
-    default:
-        std::cout << "Invalid choice.\n";
+        return;
     }
+    selectedPlayers[choice - 1] = randomIndex;
+    std::cout << attributeName(static_cast<Attribute>(choice - 1)) << " assigned to "
+              << players[randomIndex].getName() << "\n";
 }
+
 bool TennisGame::startGame()
 {
     currentRound = 0;
-
-    while (
-        !forehandTaken ||
-        !backhandTaken ||
-        !serveTaken ||
-        !volleyTaken ||
-        !dropShotTaken ||
-        !staminaTaken ||
-        !mentalStrengthTaken)
+    while (std::find(selectedPlayers.begin(), selectedPlayers.end(), std::nullopt) != selectedPlayers.end())
     {
         if (!hasAvailablePlayers())
         {
             std::cout << "Not enough players to complete the selection.\n";
             return false;
         }
-
-        ++currentRound;
-
-        std::cout << "\n=== ROUND "
-                  << currentRound
-                  << " ===\n";
-
+        std::cout << "\n=== ROUND " << ++currentRound << " ===\n";
         startSelection();
         if (!std::cin)
             return false;
     }
-
     std::cout << "\n=== GAME OVER ===\n";
     showPlayerSummary();
-    std::cout << "\nFinal rating: "
-              << calculateRating()
-              << "\n";
+    std::cout << "\nFinal rating: " << calculateRating() << "\n";
     return true;
 }
+
 void TennisGame::showPlayerSummary() const
 {
     std::cout << "\n=== YOUR PLAYER ===\n";
-
-    std::cout << "Forehand: ";
-    if (selectedForehand != nullptr)
-        std::cout << selectedForehand->getName() << '\n';
-
-    std::cout << "Backhand: ";
-    if (selectedBackhand != nullptr)
-        std::cout << selectedBackhand->getName() << '\n';
-
-    std::cout << "Serve: ";
-    if (selectedServe != nullptr)
-        std::cout << selectedServe->getName() << '\n';
-
-    std::cout << "Volley: ";
-    if (selectedVolley != nullptr)
-        std::cout << selectedVolley->getName() << '\n';
-
-    std::cout << "Drop Shot: ";
-    if (selectedDropShot != nullptr)
-        std::cout << selectedDropShot->getName() << '\n';
-
-    std::cout << "Stamina: ";
-    if (selectedStamina != nullptr)
-        std::cout << selectedStamina->getName() << '\n';
-
-    std::cout << "Mental Strength: ";
-    if (selectedMentalStrength != nullptr)
-        std::cout << selectedMentalStrength->getName() << '\n';
+    for (std::size_t i = 0; i < attributeCount; ++i)
+    {
+        std::cout << attributeNames[i] << ": ";
+        if (selectedPlayers[i])
+            std::cout << players[*selectedPlayers[i]].getName();
+        std::cout << '\n';
+    }
 }
+
 int TennisGame::calculateRating() const
 {
     int total = 0;
-
-    total += selectedForehand->getRating("forehand");
-    total += selectedBackhand->getRating("backhand");
-    total += selectedServe->getRating("serve");
-    total += selectedVolley->getRating("volley");
-    total += selectedDropShot->getRating("dropShot");
-    total += selectedStamina->getRating("stamina");
-    total += selectedMentalStrength->getRating("mentalStrength");
-
-    return total / 7;
+    for (std::size_t i = 0; i < attributeCount; ++i)
+        total += players.at(selectedPlayers[i].value()).getRating(static_cast<Attribute>(i));
+    return total / static_cast<int>(attributeCount);
 }
+
 bool TennisGame::hasAvailablePlayers() const
 {
-    for (bool used : playerUsed)
-    {
-        if (!used)
-        {
-            return true;
-        }
-    }
-    return false;
+    return std::find(playerUsed.begin(), playerUsed.end(), false) != playerUsed.end();
 }
 
-int TennisGame::chooseTiebreakerPlayer(const std::string &attribute)
+int TennisGame::chooseTiebreakerPlayer(Attribute attribute)
 {
-    std::vector<int> availablePlayers;
-
-    for (int i = 0; i < players.size(); ++i)
+    std::vector<std::size_t> availablePlayers;
+    for (std::size_t i = 0; i < players.size(); ++i)
     {
         if (!playerUsed[i])
-        {
             availablePlayers.push_back(i);
-        }
     }
-
-    std::cout << "\nChoose a player for " << attribute << ":\n";
-
-    for (size_t i = 0; i < availablePlayers.size(); ++i)
-    {
-        int playerIndex = availablePlayers[i];
-
-        std::cout << i + 1 << ". "
-                  << players[playerIndex].getName()
-                  << "\n";
-    }
+    std::cout << "\nChoose a player for " << attributeName(attribute) << ":\n";
+    for (std::size_t i = 0; i < availablePlayers.size(); ++i)
+        std::cout << i + 1 << ". " << players[availablePlayers[i]].getName() << "\n";
 
     int choice;
-
     std::cout << "Choose: ";
     if (!readChoice(choice, 1, static_cast<int>(availablePlayers.size())))
         return 0;
-
-    int selectedIndex = availablePlayers[choice - 1];
+    const auto selectedIndex = availablePlayers[choice - 1];
     playerUsed[selectedIndex] = true;
-
     std::cout << players[selectedIndex].getName() << " selected.\n";
-
     return players[selectedIndex].getRating(attribute);
 }
-
-int TennisGame::pickRandomPlayerRating(const std::string &attribute) const
+int TennisGame::pickRandomPlayerRating(Attribute attribute) const
 {
     std::random_device rd;
     std::mt19937 generator(rd());
@@ -356,18 +196,9 @@ void TennisGame::startTiebreaker(TennisGame &other)
     std::random_device rd;
     std::mt19937 generator(rd());
 
-    std::vector<std::string> attributes = {
-        "forehand",
-        "backhand",
-        "serve",
-        "volley",
-        "dropShot",
-        "stamina",
-        "mentalStrength"};
-
     std::uniform_int_distribution<int> attributeDistribution(
         0,
-        static_cast<int>(attributes.size()) - 1);
+        static_cast<int>(attributeCount) - 1);
 
     bool decided = false;
 
@@ -388,9 +219,9 @@ void TennisGame::startTiebreaker(TennisGame &other)
             return;
         }
 
-        const std::string &attribute = attributes[attributeDistribution(generator)];
+        const auto attribute = static_cast<Attribute>(attributeDistribution(generator));
 
-        std::cout << "\nTiebreaker attribute: " << attribute << "\n";
+        std::cout << "\nTiebreaker attribute: " << attributeName(attribute) << "\n";
 
         int value1;
         int value2;
@@ -418,7 +249,7 @@ void TennisGame::startTiebreaker(TennisGame &other)
                 return;
         }
 
-        std::cout << "\nComparing " << attribute << ": "
+        std::cout << "\nComparing " << attributeName(attribute) << ": "
                   << value1 << " vs " << value2 << "\n";
 
         if (value1 > value2)

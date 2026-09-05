@@ -10,13 +10,7 @@ TennisPlayer::TennisPlayer(
     int stamina,
     int mentalStrength)
     : name(name),
-      forehand(forehand),
-      backhand(backhand),
-      serve(serve),
-      volley(volley),
-      dropShot(dropShot),
-      stamina(stamina),
-      mentalStrength(mentalStrength)
+      ratings{forehand, backhand, serve, volley, dropShot, stamina, mentalStrength}
 {
 }
 
@@ -24,28 +18,7 @@ std::string TennisPlayer::getName() const
 {
     return name;
 }
-int TennisPlayer::getRating(const std::string &attribute) const
+int TennisPlayer::getRating(Attribute attribute) const
 {
-    if (attribute == "forehand")
-        return forehand;
-
-    if (attribute == "backhand")
-        return backhand;
-
-    if (attribute == "serve")
-        return serve;
-
-    if (attribute == "volley")
-        return volley;
-
-    if (attribute == "dropShot")
-        return dropShot;
-
-    if (attribute == "stamina")
-        return stamina;
-
-    if (attribute == "mentalStrength")
-        return mentalStrength;
-
-    return 0;
+    return ratings.at(static_cast<std::size_t>(attribute));
 }

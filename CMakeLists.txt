@@ -12,3 +12,14 @@ add_executable(tennis-player-builder
 )
 
 target_include_directories(tennis-player-builder PRIVATE include)
+
+include(CTest)
+if(BUILD_TESTING)
+    add_executable(tennis-game-tests
+        tests/TennisGameTests.cpp
+        src/TennisPlayer.cpp
+        src/TennisGame.cpp
+    )
+    target_include_directories(tennis-game-tests PRIVATE include)
+    add_test(NAME tennis-game-regressions COMMAND tennis-game-tests)
+endif()

@@ -3,6 +3,7 @@
 #include "TennisPlayer.h"
 
 #include <vector>
+#include <optional>
 
 class TennisGame
 {
@@ -10,21 +11,7 @@ private:
     std::vector<TennisPlayer> players;
     std::vector<bool> playerUsed;
 
-    TennisPlayer *selectedForehand = nullptr;
-    TennisPlayer *selectedBackhand = nullptr;
-    TennisPlayer *selectedServe = nullptr;
-    TennisPlayer *selectedVolley = nullptr;
-    TennisPlayer *selectedDropShot = nullptr;
-    TennisPlayer *selectedStamina = nullptr;
-    TennisPlayer *selectedMentalStrength = nullptr;
-
-    bool forehandTaken = false;
-    bool backhandTaken = false;
-    bool serveTaken = false;
-    bool volleyTaken = false;
-    bool dropShotTaken = false;
-    bool staminaTaken = false;
-    bool mentalStrengthTaken = false;
+    std::array<std::optional<std::size_t>, attributeCount> selectedPlayers{};
 
     int currentRound = 0;
 
@@ -48,7 +35,7 @@ public:
     void showPlayerSummary() const;
 
 private:
-    int chooseTiebreakerPlayer(const std::string &attribute);
-    int pickRandomPlayerRating(const std::string &attribute) const;
+    int chooseTiebreakerPlayer(Attribute attribute);
+    int pickRandomPlayerRating(Attribute attribute) const;
     bool hasAvailablePlayers() const;
 };

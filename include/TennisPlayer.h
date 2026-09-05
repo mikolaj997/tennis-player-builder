@@ -1,18 +1,13 @@
 #pragma once
 
 #include <string>
+#include "Attribute.h"
 
 class TennisPlayer {
 private:
     std::string name;
 
-    int forehand;
-    int backhand;
-    int serve;
-    int volley;
-    int dropShot;
-    int stamina;
-    int mentalStrength;
+    std::array<int, attributeCount> ratings;
 
 public:
     TennisPlayer(
@@ -27,5 +22,5 @@ public:
     );
 
     std::string getName() const;
-    int getRating(const std::string& attribute) const;
+    int getRating(Attribute attribute) const;
 };
