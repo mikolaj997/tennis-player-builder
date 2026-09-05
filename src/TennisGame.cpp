@@ -47,6 +47,17 @@ void TennisGame::startSelection()
             availablePlayers.push_back(i);
         }
     }
+    if (availablePlayers.empty())
+    {
+        std::cout << "No players left to choose from.\n";
+        return;
+    }
+
+    const int remainingAttributes =
+        !forehandTaken + !backhandTaken + !serveTaken + !volleyTaken +
+        !dropShotTaken + !staminaTaken + !mentalStrengthTaken;
+    const bool canSkip = availablePlayers.size() > static_cast<size_t>(remainingAttributes);
+
     std::uniform_int_distribution<int> distribution(
         0,
         static_cast<int>(availablePlayers.size()) - 1);
@@ -59,7 +70,8 @@ void TennisGame::startSelection()
 
     std::cout << "Choose an attribute:\n";
 
-    std::cout << "0. Skip\n";
+    if (canSkip)
+        std::cout << "0. Skip\n";
     if (!forehandTaken)
         std::cout << "1. Forehand\n";
 
@@ -84,6 +96,15 @@ void TennisGame::startSelection()
     int choice;
     std::cout << "Choose: ";
     std::cin >> choice;
+
+    while (std::cin && choice == 0 && !canSkip)
+    {
+        std::cout << "No skips left. Choose an attribute: ";
+        std::cin >> choice;
+    }
+
+    if (!std::cin)
+        return;
 
     switch (choice)
     {
@@ -171,7 +192,7 @@ void TennisGame::startSelection()
         std::cout << "Invalid choice.\n";
     }
 }
-void TennisGame::startGame()
+bool TennisGame::startGame()
 {
     currentRound = 0;
 
@@ -184,6 +205,12 @@ void TennisGame::startGame()
         !staminaTaken ||
         !mentalStrengthTaken)
     {
+        if (!hasAvailablePlayers())
+        {
+            std::cout << "Not enough players to complete the selection.\n";
+            return false;
+        }
+
         ++currentRound;
 
         std::cout << "\n=== ROUND "
@@ -191,6 +218,8 @@ void TennisGame::startGame()
                   << " ===\n";
 
         startSelection();
+        if (!std::cin)
+            return false;
     }
 
     std::cout << "\n=== GAME OVER ===\n";
@@ -198,6 +227,7 @@ void TennisGame::startGame()
     std::cout << "\nFinal rating: "
               << calculateRating()
               << "\n";
+    return true;
 }
 void TennisGame::showPlayerSummary() const
 {

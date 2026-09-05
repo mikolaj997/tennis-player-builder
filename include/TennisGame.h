@@ -42,7 +42,7 @@ public:
     int calculateRating() const;
 
     void showPlayers() const;
-    void startGame();
+    bool startGame();
     void startSelection();
     void startTiebreaker(TennisGame &other);
     void showPlayerSummary() const;

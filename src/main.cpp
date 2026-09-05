@@ -52,10 +52,12 @@ int main()
         loadPlayers(player2);
 
         std::cout << "\n=== PLAYER 1 ===\n";
-        player1.startGame();
+        if (!player1.startGame())
+            return 0;
 
         std::cout << "\n=== PLAYER 2 ===\n";
-        player2.startGame();
+        if (!player2.startGame())
+            return 0;
 
         std::cout << "\n=== RESULT ===\n";
 
