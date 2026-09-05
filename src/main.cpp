@@ -1,4 +1,5 @@
 #include "TennisGame.h"
+#include "ConsoleInput.h"
 
 #include <iostream>
 #include <random>
@@ -30,7 +31,8 @@ int main()
     std::cout << "0. Exit\n";
     std::cout << "Choose mode: ";
 
-    std::cin >> mode;
+    if (!readChoice(mode, 0, 2))
+        return 0;
 
     if (mode == 0)
     {

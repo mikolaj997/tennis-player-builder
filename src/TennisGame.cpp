@@ -1,4 +1,5 @@
 #include "TennisGame.h"
+#include "ConsoleInput.h"
 
 #include <iostream>
 #include <random>
@@ -64,7 +65,6 @@ void TennisGame::startSelection()
 
     int randomIndex = availablePlayers[distribution(generator)];
 
-    playerUsed[randomIndex] = true;
     std::cout << "\nRandom player:\n";
     std::cout << players[randomIndex].getName() << "\n\n";
 
@@ -95,16 +95,26 @@ void TennisGame::startSelection()
 
     int choice;
     std::cout << "Choose: ";
-    std::cin >> choice;
-
-    while (std::cin && choice == 0 && !canSkip)
+    const bool taken[] = {false, forehandTaken, backhandTaken, serveTaken,
+                          volleyTaken, dropShotTaken, staminaTaken, mentalStrengthTaken};
+    while (true)
     {
-        std::cout << "No skips left. Choose an attribute: ";
-        std::cin >> choice;
+        if (!readChoice(choice, 0, 7))
+            return;
+        if (choice == 0 && !canSkip)
+        {
+            std::cout << "No skips left. Choose an attribute: ";
+            continue;
+        }
+        if (taken[choice])
+        {
+            std::cout << "Attribute already taken. Choose another attribute: ";
+            continue;
+        }
+        break;
     }
 
-    if (!std::cin)
-        return;
+    playerUsed[randomIndex] = true;
 
     switch (choice)
     {
@@ -313,13 +323,8 @@ int TennisGame::chooseTiebreakerPlayer(const std::string &attribute)
     int choice;
 
     std::cout << "Choose: ";
-    std::cin >> choice;
-
-    while (choice < 1 || choice > static_cast<int>(availablePlayers.size()))
-    {
-        std::cout << "Invalid choice. Choose again: ";
-        std::cin >> choice;
-    }
+    if (!readChoice(choice, 1, static_cast<int>(availablePlayers.size())))
+        return 0;
 
     int selectedIndex = availablePlayers[choice - 1];
     playerUsed[selectedIndex] = true;
@@ -404,9 +409,13 @@ void TennisGame::startTiebreaker(TennisGame &other)
         {
             std::cout << "\n--- Player 1 ---\n";
             value1 = chooseTiebreakerPlayer(attribute);
+            if (!std::cin)
+                return;
 
             std::cout << "\n--- Player 2 ---\n";
             value2 = other.chooseTiebreakerPlayer(attribute);
+            if (!std::cin)
+                return;
         }
 
         std::cout << "\nComparing " << attribute << ": "
