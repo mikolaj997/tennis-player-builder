@@ -55,7 +55,10 @@ void TennisGame::startSelection()
     }
 
     const auto remainingAttributes = std::count(selectedPlayers.begin(), selectedPlayers.end(), std::nullopt);
-    const bool canSkip = availablePlayers.size() > static_cast<size_t>(remainingAttributes);
+    const auto skipsLeft = availablePlayers.size() > static_cast<std::size_t>(remainingAttributes)
+        ? availablePlayers.size() - static_cast<std::size_t>(remainingAttributes)
+        : 0;
+    const bool canSkip = skipsLeft > 0;
 
     std::uniform_int_distribution<int> distribution(
         0,
@@ -67,6 +70,7 @@ void TennisGame::startSelection()
     std::cout << players[randomIndex].getName() << "\n\n";
 
     std::cout << "Choose an attribute:\n";
+    std::cout << "Skips left: " << skipsLeft << "\n";
 
     if (canSkip)
         std::cout << "0. Skip\n";
