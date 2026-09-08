@@ -14,6 +14,7 @@ private:
     std::array<std::optional<std::size_t>, attributeCount> selectedPlayers{};
 
     int currentRound = 0;
+    std::optional<std::size_t> pendingPlayer;
 
 public:
     void addPlayer(
@@ -30,9 +31,18 @@ public:
 
     void showPlayers() const;
     bool startGame();
+    bool prepareRound();
+    bool selectAttribute(Attribute attribute);
+    bool skipRound();
+    bool isComplete() const;
+    bool isRoundReady() const;
+    std::string pendingPlayerName() const;
+    int skipsLeft() const;
+    bool attributeAvailable(Attribute attribute) const;
     void startSelection();
     void startTiebreaker(TennisGame &other);
     void showPlayerSummary() const;
+    std::vector<std::string> playerSummaryLines() const;
 
 private:
     int chooseTiebreakerPlayer(Attribute attribute);

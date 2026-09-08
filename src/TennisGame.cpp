@@ -28,6 +28,85 @@ void TennisGame::addPlayer(
     playerUsed.push_back(false);
 }
 
+bool TennisGame::prepareRound()
+{
+    if (isComplete() || pendingPlayer)
+        return !isComplete();
+
+    std::vector<std::size_t> availablePlayers;
+    for (std::size_t i = 0; i < players.size(); ++i)
+    {
+        if (!playerUsed[i])
+            availablePlayers.push_back(i);
+    }
+
+    if (availablePlayers.empty())
+        return false;
+
+    std::random_device rd;
+    std::mt19937 generator(rd());
+    std::uniform_int_distribution<std::size_t> distribution(0, availablePlayers.size() - 1);
+    pendingPlayer = availablePlayers[distribution(generator)];
+    return true;
+}
+
+bool TennisGame::selectAttribute(Attribute attribute)
+{
+    if (!pendingPlayer || !attributeAvailable(attribute))
+        return false;
+
+    const auto attributeIndex = static_cast<std::size_t>(attribute);
+    selectedPlayers[attributeIndex] = *pendingPlayer;
+    playerUsed[*pendingPlayer] = true;
+    pendingPlayer.reset();
+    return true;
+}
+
+bool TennisGame::skipRound()
+{
+    if (!pendingPlayer || skipsLeft() <= 0)
+        return false;
+
+    playerUsed[*pendingPlayer] = true;
+    pendingPlayer.reset();
+    return true;
+}
+
+bool TennisGame::isComplete() const
+{
+    return std::find(selectedPlayers.begin(), selectedPlayers.end(), std::nullopt) == selectedPlayers.end();
+}
+
+bool TennisGame::isRoundReady() const
+{
+    return pendingPlayer.has_value();
+}
+
+std::string TennisGame::pendingPlayerName() const
+{
+    return pendingPlayer ? players[*pendingPlayer].getName() : std::string{};
+}
+
+int TennisGame::skipsLeft() const
+{
+    std::size_t availableCount = 0;
+    for (const bool used : playerUsed)
+    {
+        if (!used)
+            ++availableCount;
+    }
+
+    const auto remainingAttributes = std::count(selectedPlayers.begin(), selectedPlayers.end(), std::nullopt);
+    const auto remaining = static_cast<std::size_t>(remainingAttributes);
+    return availableCount > remaining ? static_cast<int>(availableCount - remaining) : 0;
+}
+
+bool TennisGame::attributeAvailable(Attribute attribute) const
+{
+    const auto attributeIndex = static_cast<std::size_t>(attribute);
+    return attributeIndex < selectedPlayers.size() && !selectedPlayers[attributeIndex];
+}
+
 void TennisGame::startSelection()
 {
     if (players.empty())
@@ -56,8 +135,8 @@ void TennisGame::startSelection()
 
     const auto remainingAttributes = std::count(selectedPlayers.begin(), selectedPlayers.end(), std::nullopt);
     const auto skipsLeft = availablePlayers.size() > static_cast<std::size_t>(remainingAttributes)
-        ? availablePlayers.size() - static_cast<std::size_t>(remainingAttributes)
-        : 0;
+                               ? availablePlayers.size() - static_cast<std::size_t>(remainingAttributes)
+                               : 0;
     const bool canSkip = skipsLeft > 0;
 
     std::uniform_int_distribution<int> distribution(
@@ -134,14 +213,21 @@ bool TennisGame::startGame()
 
 void TennisGame::showPlayerSummary() const
 {
-    std::cout << "\n=== YOUR PLAYER ===\n";
+    for (const auto &line : playerSummaryLines())
+        std::cout << line << '\n';
+}
+
+std::vector<std::string> TennisGame::playerSummaryLines() const
+{
+    std::vector<std::string> lines{"=== YOUR PLAYER ==="};
     for (std::size_t i = 0; i < attributeCount; ++i)
     {
-        std::cout << attributeNames[i] << ": ";
+        std::string line = std::string(attributeNames[i]) + ": ";
         if (selectedPlayers[i])
-            std::cout << players[*selectedPlayers[i]].getName();
-        std::cout << '\n';
+            line += players[*selectedPlayers[i]].getName();
+        lines.push_back(line);
     }
+    return lines;
 }
 
 int TennisGame::calculateRating() const
@@ -165,12 +251,7 @@ int TennisGame::chooseTiebreakerPlayer(Attribute attribute)
         if (!playerUsed[i])
             availablePlayers.push_back(i);
     }
-    std::cout << "\nChoose a player for " << attributeName(attribute) << ":\n";
-    for (std::size_t i = 0; i < availablePlayers.size(); ++i)
-        std::cout << i + 1 << ". " << players[availablePlayers[i]].getName() << "\n";
-
     int choice;
-    std::cout << "Choose: ";
     if (!readChoice(choice, 1, static_cast<int>(availablePlayers.size())))
         return 0;
     const auto selectedIndex = availablePlayers[choice - 1];
@@ -242,12 +323,41 @@ void TennisGame::startTiebreaker(TennisGame &other)
         }
         else
         {
-            std::cout << "\n--- Player 1 ---\n";
+            auto playerLines = [](const TennisGame &game, const char *title)
+            {
+                std::vector<std::string> lines{"=== " + std::string(title) + " ==="};
+                std::size_t number = 1;
+                for (std::size_t i = 0; i < game.players.size(); ++i)
+                {
+                    if (!game.playerUsed[i])
+                    {
+                        lines.push_back(std::to_string(number++) + ". " +
+                                        game.players[i].getName());
+                    }
+                }
+                return lines;
+            };
+
+            const auto left = playerLines(*this, "PLAYER 1");
+            const auto right = playerLines(other, "PLAYER 2");
+            constexpr std::size_t panelWidth = 52;
+            const auto lineCount = std::max(left.size(), right.size());
+            for (std::size_t i = 0; i < lineCount; ++i)
+            {
+                const std::string leftLine = i < left.size() ? left[i] : "";
+                const std::string rightLine = i < right.size() ? right[i] : "";
+                std::cout << leftLine.substr(0, panelWidth);
+                if (leftLine.size() < panelWidth)
+                    std::cout << std::string(panelWidth - leftLine.size(), ' ');
+                std::cout << " | " << rightLine << '\n';
+            }
+
+            std::cout << "\nChoose Player 1 for " << attributeName(attribute) << ": ";
             value1 = chooseTiebreakerPlayer(attribute);
             if (!std::cin)
                 return;
 
-            std::cout << "\n--- Player 2 ---\n";
+            std::cout << "\nChoose Player 2 for " << attributeName(attribute) << ": ";
             value2 = other.chooseTiebreakerPlayer(attribute);
             if (!std::cin)
                 return;
