@@ -203,16 +203,53 @@ bool startTwoPlayerDraft(TennisGame &playerOne, TennisGame &playerTwo)
 
 void loadPlayers(TennisGame &game)
 {
-    game.addPlayer("Carlos Alcaraz", 95, 91, 90, 88, 94, 93, 92);
-    game.addPlayer("Novak Djokovic", 94, 98, 95, 93, 91, 96, 99);
-    game.addPlayer("Jannik Sinner", 96, 94, 92, 87, 90, 94, 91);
-    game.addPlayer("Alexander Zverev", 91, 93, 96, 85, 86, 92, 89);
-    game.addPlayer("Daniil Medvedev", 88, 95, 94, 82, 89, 96, 91);
-    game.addPlayer("Andrey Rublev", 94, 87, 92, 80, 85, 90, 86);
-    game.addPlayer("Taylor Fritz", 93, 88, 95, 83, 84, 89, 87);
+    // ATP singles Top 30, week of 2026-09-21, in ranking order:
+    // https://tenniscompanion.org/rankings/mens/
+    // https://www.tennisexplorer.com/ranking/atp-men/?date=2026-09-21
+    // Editorial 1-99 estimates, not official ATP statistics or percentages.
+    // 95-99: elite weapon; 90-94: major strength; 80-89: solid tour skill;
+    // 70-79: relative weakness in this pool. General ability across surfaces.
+    // Serve/groundstroke estimates use ATP stats and TDI reports as anchors:
+    // https://www.atptour.com/en/stats/leaderboard?boardType=serve&timeFrame=career
+    // https://www.atptour.com/-/media/90eba44eb7954ce59e4c810faaa9f8a1.pdf
+    // https://www.atptour.com/-/media/f79e53f8ad6a4bf5930af7b5692186db.pdf
+    // Touch, stamina and on-court composure are qualitative estimates.
+    // https://www.atptour.com/en/news/forehand-drop-shot-success-alcaraz-2023/
+    // https://www.atptour.com/en/news/learner-tien-indian-wells-2025-feature
+    // Columns: forehand, backhand, serve, volley, drop shot, stamina, mental.
+    game.addPlayer("Jannik Sinner",          98, 98, 94, 85, 83, 94, 97);
+    game.addPlayer("Alexander Zverev",      90, 95, 96, 79, 76, 95, 92);
+    game.addPlayer("Carlos Alcaraz",        98, 94, 91, 94, 99, 97, 96);
+    game.addPlayer("Ben Shelton",           91, 84, 98, 87, 81, 92, 90);
+    game.addPlayer("Felix Auger-Aliassime", 92, 85, 95, 85, 78, 91, 88);
+    game.addPlayer("Daniil Medvedev",       87, 96, 91, 76, 78, 95, 91);
+    game.addPlayer("Flavio Cobolli",        87, 90, 86, 81, 81, 92, 89);
+    game.addPlayer("Frances Tiafoe",        90, 85, 91, 92, 89, 89, 87);
+    game.addPlayer("Alex de Minaur",        86, 91, 82, 89, 84, 98, 93);
+    game.addPlayer("Taylor Fritz",          92, 89, 95, 81, 77, 91, 91);
+    game.addPlayer("Arthur Fils",           94, 86, 91, 84, 80, 92, 86);
+    game.addPlayer("Novak Djokovic",        93, 97, 91, 90, 90, 87, 99);
+    game.addPlayer("Learner Tien",          84, 92, 77, 82, 84, 93, 92);
+    game.addPlayer("Rafael Jodar",          92, 85, 89, 79, 79, 89, 86);
+    game.addPlayer("Jakub Mensik",          87, 92, 96, 80, 78, 88, 89);
+    game.addPlayer("Brandon Nakashima",     87, 92, 90, 83, 77, 89, 90);
+    game.addPlayer("Casper Ruud",           95, 83, 89, 85, 87, 95, 91);
+    game.addPlayer("Tommy Paul",            88, 89, 86, 91, 87, 94, 89);
+    game.addPlayer("Valentin Vacherot",     86, 89, 93, 85, 80, 90, 89);
+    game.addPlayer("Luciano Darderi",       91, 82, 86, 78, 83, 94, 85);
+    game.addPlayer("Alexander Bublik",      88, 84, 97, 94, 95, 81, 82);
+    game.addPlayer("Francisco Cerundolo",   95, 84, 84, 80, 86, 92, 86);
+    game.addPlayer("Jiri Lehecka",          91, 88, 93, 86, 79, 88, 87);
+    game.addPlayer("Lorenzo Musetti",       89, 92, 84, 93, 96, 91, 88);
+    game.addPlayer("Andrey Rublev",         95, 86, 90, 77, 73, 91, 81);
+    game.addPlayer("Karen Khachanov",       88, 90, 92, 80, 75, 92, 89);
+    game.addPlayer("Alexander Blockx",      85, 82, 92, 82, 84, 87, 85);
+    game.addPlayer("Joao Fonseca",          96, 86, 91, 81, 80, 87, 85);
+    game.addPlayer("Alejandro Davidovich Fokina", 87, 88, 82, 89, 93, 94, 83);
+    game.addPlayer("Tomas Martin Etcheverry",     89, 85, 87, 77, 79, 94, 86);
+
+    // Keep the original roster member outside this Top 30.
     game.addPlayer("Holger Rune", 90, 91, 89, 86, 88, 87, 88);
-    game.addPlayer("Alex de Minaur", 87, 90, 84, 89, 86, 97, 91);
-    game.addPlayer("Ben Shelton", 92, 84, 97, 78, 82, 86, 84);
 }
 
 int main()
