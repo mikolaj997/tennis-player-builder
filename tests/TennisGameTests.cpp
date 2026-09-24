@@ -42,6 +42,39 @@ int main()
     require(skipped.calculateRating() == 80);
     require(output.str().find("No skips left") != std::string::npos);
 
+    // Large rosters allow at most five skips per player in both input modes.
+    TennisGame largePool;
+    for (int i = 0; i < 31; ++i)
+        largePool.addPlayer("Player " + std::to_string(i), 80, 80, 80, 80, 80, 80, 80);
+    auto secondPlayer = largePool;
+    require(largePool.skipsLeft() == 5);
+    require(!largePool.skipRound());
+    for (int i = 0; i < 5; ++i)
+    {
+        require(largePool.prepareRound());
+        require(largePool.skipRound());
+        require(largePool.skipsLeft() == 4 - i);
+    }
+    require(secondPlayer.skipsLeft() == 5);
+    require(largePool.prepareRound());
+    const auto pendingName = largePool.pendingPlayerName();
+    require(!largePool.skipRound());
+    require(largePool.pendingPlayerName() == pendingName);
+    for (std::size_t i = 0; i < attributeCount; ++i)
+    {
+        require(largePool.prepareRound());
+        require(largePool.selectAttribute(static_cast<Attribute>(i)));
+        require(largePool.skipsLeft() == 0);
+    }
+    require(largePool.isComplete());
+    input.str("0\n0\n0\n0\n0\n0\n1\n2\n3\n4\n5\n6\n7\n");
+    std::cin.clear();
+    output.str("");
+    require(secondPlayer.startGame());
+    require(secondPlayer.skipsLeft() == 0);
+    require(output.str().find("No skips left") != std::string::npos);
+    require(output.str().find("ROUND 13") == std::string::npos);
+
     input.str("");
     std::cin.clear();
     TennisGame interrupted;

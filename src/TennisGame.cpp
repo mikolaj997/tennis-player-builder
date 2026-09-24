@@ -68,6 +68,7 @@ bool TennisGame::skipRound()
         return false;
 
     playerUsed[*pendingPlayer] = true;
+    ++skipsUsed;
     pendingPlayer.reset();
     return true;
 }
@@ -98,7 +99,8 @@ int TennisGame::skipsLeft() const
 
     const auto remainingAttributes = std::count(selectedPlayers.begin(), selectedPlayers.end(), std::nullopt);
     const auto remaining = static_cast<std::size_t>(remainingAttributes);
-    return availableCount > remaining ? static_cast<int>(availableCount - remaining) : 0;
+    const int sparePlayers = availableCount > remaining ? static_cast<int>(availableCount - remaining) : 0;
+    return std::min(maxSkips - skipsUsed, sparePlayers);
 }
 
 bool TennisGame::attributeAvailable(Attribute attribute) const
@@ -133,11 +135,8 @@ void TennisGame::startSelection()
         return;
     }
 
-    const auto remainingAttributes = std::count(selectedPlayers.begin(), selectedPlayers.end(), std::nullopt);
-    const auto skipsLeft = availablePlayers.size() > static_cast<std::size_t>(remainingAttributes)
-                               ? availablePlayers.size() - static_cast<std::size_t>(remainingAttributes)
-                               : 0;
-    const bool canSkip = skipsLeft > 0;
+    const int remainingSkips = skipsLeft();
+    const bool canSkip = remainingSkips > 0;
 
     std::uniform_int_distribution<int> distribution(
         0,
@@ -149,7 +148,7 @@ void TennisGame::startSelection()
     std::cout << players[randomIndex].getName() << "\n\n";
 
     std::cout << "Choose an attribute:\n";
-    std::cout << "Skips left: " << skipsLeft << "\n";
+    std::cout << "Skips left: " << remainingSkips << "\n";
 
     if (canSkip)
         std::cout << "0. Skip\n";
@@ -182,6 +181,7 @@ void TennisGame::startSelection()
 
     if (choice == 0)
     {
+        ++skipsUsed;
         std::cout << "Player skipped.\n";
         return;
     }

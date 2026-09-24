@@ -14,6 +14,8 @@ private:
     std::array<std::optional<std::size_t>, attributeCount> selectedPlayers{};
 
     int currentRound = 0;
+    static constexpr int maxSkips = 5;
+    int skipsUsed = 0;
     std::optional<std::size_t> pendingPlayer;
 
 public:
