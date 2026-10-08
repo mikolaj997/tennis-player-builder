@@ -19,9 +19,14 @@ Each tennis player has predefined ratings for:
 - Forehand
 - Backhand
 - Serve
+- Return
 - Volley
 - Drop Shot
+- Slice
+- Power
 - Stamina
+- Speed
+- Defense
 - Mental Strength
 
 The ratings are hidden during the selection process and are revealed only
@@ -31,11 +36,10 @@ when the final player is evaluated.
 
 - Random player selection
 - No repeated players within a single draft
-- Seven different tennis attributes
-- Skip mechanic
+- Twelve different tennis attributes
+- Tiebreaker in case of a draw- Skip mechanic
 - Hidden attribute ratings
 - Final player rating
-- Tibreak in case of draw
 - Single-player mode
 - Two-player mode
 - Winner determination
@@ -48,6 +52,7 @@ when the final player is evaluated.
 - CMake
 - GNU Make
 - MinGW / GCC
+- STL
 
 ## Project Structure
 
@@ -57,8 +62,12 @@ tennis-player-builder/
 ├── Makefile
 ├── README.md
 ├── include/
+│   ├── Attribute.h
+│   ├── ConsoleInput.h
 │   ├── TennisPlayer.h
 │   └── TennisGame.h
+├── tests/
+│   └── TennisGameTests.cpp
 └── src/
     ├── TennisPlayer.cpp
     ├── TennisGame.cpp
