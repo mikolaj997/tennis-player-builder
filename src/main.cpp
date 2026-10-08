@@ -37,7 +37,7 @@ const std::array<KeyBinding, attributeCount> playerTwoKeys = {{{'H', Attribute::
                                                                {'J', Attribute::Backhand},
                                                                {'K', Attribute::Serve},
                                                                {'L', Attribute::Return},
-                                                               {';', Attribute::Volley},
+                                                               {'C', Attribute::Volley},
                                                                {'Y', Attribute::DropShot},
                                                                {'U', Attribute::Slice},
                                                                {'I', Attribute::Power},
@@ -79,8 +79,8 @@ std::vector<std::string> makeDraftPanel(const char *title, const TennisGame &gam
 void showDraftPanels(const TennisGame &playerOne, const TennisGame &playerTwo,
                      bool playerOneSubmitted, bool playerTwoSubmitted)
 {
-    const auto left = makeDraftPanel("PLAYER 1", playerOne, playerOneKeys, 'R', playerOneSubmitted);
-    const auto right = makeDraftPanel("PLAYER 2", playerTwo, playerTwoKeys, 'O', playerTwoSubmitted);
+    const auto left = makeDraftPanel("PLAYER 1", playerOne, playerOneKeys, 'V', playerOneSubmitted);
+    const auto right = makeDraftPanel("PLAYER 2", playerTwo, playerTwoKeys, 'B', playerTwoSubmitted);
     const auto lineCount = std::max(left.size(), right.size());
     constexpr std::size_t panelWidth = 52;
 
@@ -128,10 +128,16 @@ int readDraftKey()
     // const std::array<int, 17> keys = {
     //     VK_ESCAPE, 'A', 'S', 'D', 'F', 'Q', 'W', 'E',
     //     'R', 'H', 'J', 'K', 'L', 'Y', 'U', 'I', 'O'};
-    const std::array<int, 26> keys = {
-        27,
-        'A', 'S', 'D', 'F', 'G', 'Q', 'W', 'E', 'R', 'T', 'Z', 'X',
-        'H', 'J', 'K', 'L', ';', 'Y', 'U', 'I', 'O', 'P', 'N', 'M'};
+    const std::array<int, 28> keys = {
+        VK_ESCAPE,
+
+        // Player 1
+        'A', 'S', 'D', 'F', 'G', 'Q', 'W', 'E',
+        'R', 'T', 'Z', 'X', 'V',
+
+        // Player 2
+        'H', 'J', 'K', 'L', 'C', 'Y', 'U', 'I',
+        'O', 'P', 'N', 'M', 'B'};
     while (true)
     {
         for (const int key : keys)
@@ -193,12 +199,12 @@ bool startTwoPlayerDraft(TennisGame &playerOne, TennisGame &playerTwo)
 
         if (!playerOneSubmitted && !playerOne.isComplete())
         {
-            if (handleDraftKey(playerOne, key, playerOneKeys, 'R'))
+            if (handleDraftKey(playerOne, key, playerOneKeys, 'V'))
                 playerOneSubmitted = true;
         }
         if (!playerTwoSubmitted && !playerTwo.isComplete())
         {
-            if (handleDraftKey(playerTwo, key, playerTwoKeys, 'O'))
+            if (handleDraftKey(playerTwo, key, playerTwoKeys, 'B'))
                 playerTwoSubmitted = true;
         }
 
