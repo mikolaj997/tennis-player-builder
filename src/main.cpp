@@ -23,19 +23,28 @@ struct KeyBinding
 const std::array<KeyBinding, attributeCount> playerOneKeys = {{{'A', Attribute::Forehand},
                                                                {'S', Attribute::Backhand},
                                                                {'D', Attribute::Serve},
-                                                               {'F', Attribute::Volley},
+                                                               {'F', Attribute::Return},
+                                                               {'G', Attribute::Volley},
                                                                {'Q', Attribute::DropShot},
-                                                               {'W', Attribute::Stamina},
-                                                               {'E', Attribute::MentalStrength}}};
+                                                               {'W', Attribute::Slice},
+                                                               {'E', Attribute::Power},
+                                                               {'R', Attribute::Stamina},
+                                                               {'T', Attribute::Speed},
+                                                               {'Z', Attribute::Defense},
+                                                               {'X', Attribute::MentalStrength}}};
 
 const std::array<KeyBinding, attributeCount> playerTwoKeys = {{{'H', Attribute::Forehand},
                                                                {'J', Attribute::Backhand},
                                                                {'K', Attribute::Serve},
-                                                               {'L', Attribute::Volley},
+                                                               {'L', Attribute::Return},
+                                                               {';', Attribute::Volley},
                                                                {'Y', Attribute::DropShot},
-                                                               {'U', Attribute::Stamina},
-                                                               {'I', Attribute::MentalStrength}}};
-
+                                                               {'U', Attribute::Slice},
+                                                               {'I', Attribute::Power},
+                                                               {'O', Attribute::Stamina},
+                                                               {'P', Attribute::Speed},
+                                                               {'N', Attribute::Defense},
+                                                               {'M', Attribute::MentalStrength}}};
 std::vector<std::string> makeDraftPanel(const char *title, const TennisGame &game,
                                         const std::array<KeyBinding, attributeCount> &keys,
                                         int skipKey, bool submitted)
@@ -116,10 +125,13 @@ void showResultPanels(const TennisGame &playerOne, const TennisGame &playerTwo,
 int readDraftKey()
 {
     static std::array<bool, 256> wasDown{};
-    const std::array<int, 17> keys = {
-        VK_ESCAPE, 'A', 'S', 'D', 'F', 'Q', 'W', 'E',
-        'R', 'H', 'J', 'K', 'L', 'Y', 'U', 'I', 'O'};
-
+    // const std::array<int, 17> keys = {
+    //     VK_ESCAPE, 'A', 'S', 'D', 'F', 'Q', 'W', 'E',
+    //     'R', 'H', 'J', 'K', 'L', 'Y', 'U', 'I', 'O'};
+    const std::array<int, 26> keys = {
+        27,
+        'A', 'S', 'D', 'F', 'G', 'Q', 'W', 'E', 'R', 'T', 'Z', 'X',
+        'H', 'J', 'K', 'L', ';', 'Y', 'U', 'I', 'O', 'P', 'N', 'M'};
     while (true)
     {
         for (const int key : keys)
@@ -217,39 +229,53 @@ void loadPlayers(TennisGame &game)
     // https://www.atptour.com/en/news/forehand-drop-shot-success-alcaraz-2023/
     // https://www.atptour.com/en/news/learner-tien-indian-wells-2025-feature
     // Columns: forehand, backhand, serve, volley, drop shot, stamina, mental.
-    game.addPlayer("Jannik Sinner",          98, 98, 94, 85, 83, 94, 97);
-    game.addPlayer("Alexander Zverev",      90, 95, 96, 79, 76, 95, 92);
-    game.addPlayer("Carlos Alcaraz",        98, 94, 91, 94, 99, 97, 96);
-    game.addPlayer("Ben Shelton",           91, 84, 98, 87, 81, 92, 90);
-    game.addPlayer("Felix Auger-Aliassime", 92, 85, 95, 85, 78, 91, 88);
-    game.addPlayer("Daniil Medvedev",       87, 96, 91, 76, 78, 95, 91);
-    game.addPlayer("Flavio Cobolli",        87, 90, 86, 81, 81, 92, 89);
-    game.addPlayer("Frances Tiafoe",        90, 85, 91, 92, 89, 89, 87);
-    game.addPlayer("Alex de Minaur",        86, 91, 82, 89, 84, 98, 93);
-    game.addPlayer("Taylor Fritz",          92, 89, 95, 81, 77, 91, 91);
-    game.addPlayer("Arthur Fils",           94, 86, 91, 84, 80, 92, 86);
-    game.addPlayer("Novak Djokovic",        93, 97, 91, 90, 90, 87, 99);
-    game.addPlayer("Learner Tien",          84, 92, 77, 82, 84, 93, 92);
-    game.addPlayer("Rafael Jodar",          92, 85, 89, 79, 79, 89, 86);
-    game.addPlayer("Jakub Mensik",          87, 92, 96, 80, 78, 88, 89);
-    game.addPlayer("Brandon Nakashima",     87, 92, 90, 83, 77, 89, 90);
-    game.addPlayer("Casper Ruud",           95, 83, 89, 85, 87, 95, 91);
-    game.addPlayer("Tommy Paul",            88, 89, 86, 91, 87, 94, 89);
-    game.addPlayer("Valentin Vacherot",     86, 89, 93, 85, 80, 90, 89);
-    game.addPlayer("Luciano Darderi",       91, 82, 86, 78, 83, 94, 85);
-    game.addPlayer("Alexander Bublik",      88, 84, 97, 94, 95, 81, 82);
-    game.addPlayer("Francisco Cerundolo",   95, 84, 84, 80, 86, 92, 86);
-    game.addPlayer("Jiri Lehecka",          91, 88, 93, 86, 79, 88, 87);
-    game.addPlayer("Lorenzo Musetti",       89, 92, 84, 93, 96, 91, 88);
-    game.addPlayer("Andrey Rublev",         95, 86, 90, 77, 73, 91, 81);
-    game.addPlayer("Karen Khachanov",       88, 90, 92, 80, 75, 92, 89);
-    game.addPlayer("Alexander Blockx",      85, 82, 92, 82, 84, 87, 85);
-    game.addPlayer("Joao Fonseca",          96, 86, 91, 81, 80, 87, 85);
-    game.addPlayer("Alejandro Davidovich Fokina", 87, 88, 82, 89, 93, 94, 83);
-    game.addPlayer("Tomas Martin Etcheverry",     89, 85, 87, 77, 79, 94, 86);
+    game.addPlayer(
+        "Jannik Sinner",
+        96, // Forehand
+        95, // Backhand
+        96, // Serve
+        97, // Return
+        91, // Volley
+        88, // Drop Shot
+        91, // Slice
+        97, // Power
+        94, // Stamina
+        96, // Speed
+        95, // Defense
+        96  // Mental Strength
+    );
+    game.addPlayer("Alexander Zverev", 90, 95, 96, 89, 79, 76, 82, 96, 95, 87, 88, 92);
+    game.addPlayer("Carlos Alcaraz", 98, 94, 91, 96, 94, 99, 97, 97, 97, 99, 98, 96);
+    game.addPlayer("Ben Shelton", 91, 84, 98, 88, 87, 81, 79, 98, 92, 96, 84, 90);
+    game.addPlayer("Felix Auger-Aliassime", 92, 85, 95, 87, 85, 78, 82, 95, 91, 91, 85, 88);
+    game.addPlayer("Daniil Medvedev", 87, 96, 91, 96, 76, 78, 86, 91, 95, 88, 98, 91);
+    game.addPlayer("Flavio Cobolli", 87, 90, 86, 88, 81, 81, 84, 89, 92, 91, 89, 89);
+    game.addPlayer("Frances Tiafoe", 90, 85, 91, 89, 92, 89, 86, 94, 89, 94, 86, 87);
+    game.addPlayer("Alex de Minaur", 86, 91, 82, 95, 89, 84, 88, 86, 98, 99, 99, 93);
+    game.addPlayer("Taylor Fritz", 92, 89, 95, 88, 81, 77, 82, 97, 91, 92, 87, 91);
+    game.addPlayer("Arthur Fils", 94, 86, 91, 89, 84, 80, 82, 96, 92, 96, 87, 86);
+    game.addPlayer("Novak Djokovic", 93, 97, 91, 99, 90, 90, 96, 91, 87, 94, 99, 99);
+    game.addPlayer("Learner Tien", 84, 92, 77, 88, 82, 84, 87, 84, 93, 91, 92, 92);
+    game.addPlayer("Rafael Jodar", 92, 85, 89, 87, 79, 79, 82, 89, 89, 92, 86, 86);
+    game.addPlayer("Jakub Mensik", 87, 92, 96, 88, 80, 78, 84, 98, 88, 94, 87, 89);
+    game.addPlayer("Brandon Nakashima", 87, 92, 90, 90, 83, 77, 86, 93, 89, 90, 91, 90);
+    game.addPlayer("Casper Ruud", 95, 83, 89, 90, 85, 87, 91, 92, 95, 91, 94, 91);
+    game.addPlayer("Tommy Paul", 88, 89, 86, 94, 91, 87, 89, 88, 94, 96, 93, 89);
+    game.addPlayer("Valentin Vacherot", 86, 89, 93, 89, 85, 80, 84, 92, 90, 92, 88, 89);
+    game.addPlayer("Luciano Darderi", 91, 82, 86, 84, 78, 83, 85, 93, 94, 91, 87, 85);
+    game.addPlayer("Alexander Bublik", 88, 84, 97, 90, 94, 95, 92, 98, 81, 91, 83, 82);
+    game.addPlayer("Francisco Cerundolo", 95, 84, 84, 91, 80, 86, 89, 91, 92, 94, 91, 86);
+    game.addPlayer("Jiri Lehecka", 91, 88, 93, 90, 86, 79, 84, 95, 88, 94, 87, 87);
+    game.addPlayer("Lorenzo Musetti", 89, 92, 84, 94, 93, 96, 98, 88, 91, 92, 91, 88);
+    game.addPlayer("Andrey Rublev", 95, 86, 90, 84, 77, 73, 78, 99, 91, 92, 84, 81);
+    game.addPlayer("Karen Khachanov", 88, 90, 92, 86, 80, 75, 80, 98, 92, 91, 87, 89);
+    game.addPlayer("Alexander Blockx", 85, 82, 92, 84, 82, 84, 83, 92, 87, 90, 84, 85);
+    game.addPlayer("Joao Fonseca", 96, 86, 91, 91, 81, 80, 84, 96, 87, 96, 85, 85);
+    game.addPlayer("Alejandro Davidovich Fokina", 87, 88, 82, 92, 89, 93, 96, 89, 94, 97, 95, 83);
+    game.addPlayer("Tomas Martin Etcheverry", 89, 85, 87, 83, 77, 79, 82, 94, 94, 89, 88, 86);
 
     // Keep the original roster member outside this Top 30.
-    game.addPlayer("Holger Rune", 90, 91, 89, 86, 88, 87, 88);
+    game.addPlayer("Holger Rune", 90, 91, 89, 92, 86, 88, 91, 94, 87, 94, 93, 88);
 }
 
 int main()
