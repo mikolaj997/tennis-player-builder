@@ -20,14 +20,19 @@ private:
 
 public:
     void addPlayer(
-        const std::string &name,
-        int forehand,
-        int backhand,
-        int serve,
-        int volley,
-        int dropShot,
-        int stamina,
-        int mentalStrength);
+    const std::string &name,
+    int forehand,
+    int backhand,
+    int serve,
+    int returnRating,
+    int volley,
+    int dropShot,
+    int slice,
+    int power,
+    int stamina,
+    int speed,
+    int defense,
+    int mentalStrength);
 
     int calculateRating() const;
 

@@ -19,7 +19,10 @@ int main()
 
     TennisGame game;
     for (int i = 0; i < 10; ++i)
-        game.addPlayer("Original", 70, 71, 72, 73, 74, 75, 76);
+        game.addPlayer(
+            "Original",
+            70, 71, 72, 73, 74, 75,
+            76, 77, 78, 79, 80, 81);
     require(game.startGame());
     require(game.calculateRating() == 73);
     require(output.str().find("Attribute already taken") != std::string::npos);
@@ -27,7 +30,10 @@ int main()
 
     // Force vector growth after assigning every attribute.
     for (int i = 0; i < 1000; ++i)
-        game.addPlayer("Added", 1, 1, 1, 1, 1, 1, 1);
+        game.addPlayer(
+            "Added",
+            1, 1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1, 1);
     require(game.calculateRating() == 73);
     auto copy = game;
     game = TennisGame{};
@@ -35,7 +41,10 @@ int main()
 
     TennisGame skipped;
     for (int i = 0; i < 10; ++i)
-        skipped.addPlayer("Player", 80, 80, 80, 80, 80, 80, 80);
+        skipped.addPlayer(
+            "Player",
+            80, 80, 80, 80, 80, 80,
+            80, 80, 80, 80, 80, 80);
     input.str("0\n0\n0\n0\n1\n2\n3\n4\n5\n6\n7\n");
     std::cin.clear();
     require(skipped.startGame());
@@ -45,7 +54,10 @@ int main()
     // Large rosters allow at most five skips per player in both input modes.
     TennisGame largePool;
     for (int i = 0; i < 31; ++i)
-        largePool.addPlayer("Player " + std::to_string(i), 80, 80, 80, 80, 80, 80, 80);
+        largePool.addPlayer(
+            "Player " + std::to_string(i),
+            80, 80, 80, 80, 80, 80,
+            80, 80, 80, 80, 80, 80);
     auto secondPlayer = largePool;
     require(largePool.skipsLeft() == 5);
     require(!largePool.skipRound());
@@ -78,7 +90,10 @@ int main()
     input.str("");
     std::cin.clear();
     TennisGame interrupted;
-    interrupted.addPlayer("Player", 1, 2, 3, 4, 5, 6, 7);
+    interrupted.addPlayer(
+        "Player",
+        1, 2, 3, 4, 5, 6,
+        7, 8, 9, 10, 11, 12);
     require(!interrupted.startGame());
     std::cin.clear();
     copy.startTiebreaker(copy); // EOF while choosing from the bench.

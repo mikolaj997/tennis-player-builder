@@ -5,12 +5,29 @@ TennisPlayer::TennisPlayer(
     int forehand,
     int backhand,
     int serve,
+    int returnRating,
     int volley,
     int dropShot,
+    int slice,
+    int power,
     int stamina,
+    int speed,
+    int defense,
     int mentalStrength)
     : name(name),
-      ratings{forehand, backhand, serve, volley, dropShot, stamina, mentalStrength}
+      ratings{
+          forehand,
+          backhand,
+          serve,
+          returnRating,
+          volley,
+          dropShot,
+          slice,
+          power,
+          stamina,
+          speed,
+          defense,
+          mentalStrength}
 {
 }
 

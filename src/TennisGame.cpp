@@ -10,9 +10,14 @@ void TennisGame::addPlayer(
     int forehand,
     int backhand,
     int serve,
+    int returnRating,
     int volley,
     int dropShot,
+    int slice,
+    int power,
     int stamina,
+    int speed,
+    int defense,
     int mentalStrength)
 {
     players.emplace_back(
@@ -20,9 +25,14 @@ void TennisGame::addPlayer(
         forehand,
         backhand,
         serve,
+        returnRating,
         volley,
         dropShot,
+        slice,
+        power,
         stamina,
+        speed,
+        defense,
         mentalStrength);
 
     playerUsed.push_back(false);
